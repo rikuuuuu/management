@@ -1,0 +1,36 @@
+{
+  "name": "o2-admin",
+  "description": "o2-admin",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "precommit": "npm run lint"
+  },
+  "dependencies": {
+    "@nuxtjs/pwa": "latest",
+    "@nuxtjs/toast": "^3.2.1",
+    "aws-sdk": "^2.553.0",
+    "bulma": "^0.7.5",
+    "chart.js": "^2.9.3",
+    "dayjs": "^1.8.16",
+    "firebase": "^7.17.2",
+    "nuxt": "^2.14.1",
+    "universal-cookie": "^4.0.2",
+    "vue-chartjs": "^3.5.0",
+    "vue-videojs7": "^0.1.5",
+    "vuex-persistedstate": "^2.5.4"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^5.16.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^2.2.1",
+    "eslint-plugin-vue": "^5.2.3",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^8.0.0"
+  }
+}
