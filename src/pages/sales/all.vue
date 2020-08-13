@@ -81,11 +81,11 @@ export default {
 
     } else {
 
-      this.$store.commit('payout/fleshPayouts') // 出金の変更対応
-      this.$store.dispatch('payout/fetchPayouts')
-      this.$store.dispatch('talk/fetchTalks')
-      this.$store.dispatch('talent/fetchTalents')
-      this.$store.dispatch('payment/fetchPayments')
+      // this.$store.commit('payout/fleshPayouts') // 出金の変更対応
+      // this.$store.dispatch('payout/fetchPayouts')
+      // this.$store.dispatch('talk/fetchTalks')
+      // this.$store.dispatch('talent/fetchTalents')
+      // this.$store.dispatch('payment/fetchPayments')
 
     }
 

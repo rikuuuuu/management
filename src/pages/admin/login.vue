@@ -4,16 +4,13 @@
     <div  v-show="!loading" class="login-contents box-shadow">
       <div class="login-items">
         <div class="login-img">
-          <img src="/O2_fix.png" alt="">
-          <p>管理者ログイン</p>
+          <img src="/nuxt-icon.png" alt="">
+          <p>簡易ログイン</p>
         </div>
         <div class="login-inputs-contents">
           <div class="login-inputs">
-            <input type="password" name="" value="" v-model="password" placeholder="パスワード">
+            <input type="password" name="" v-model="password" placeholder="パスワード">
             <button class="button-b" type="button" name="button" @click="login">ログイン</button>
-            <nuxt-link to="/admin/partnerlogin" class="">
-              <p class="plogin">パートナー事務所の方はこちら</p>
-            </nuxt-link>
           </div>
         </div>
       </div>
@@ -28,8 +25,8 @@ export default {
   data() {
     return {
       loading: true,
-      password: '',
-      pass: ''
+      pass: '',
+      password: ''
     }
   },
   components: {
@@ -47,6 +44,7 @@ export default {
         snapshot.forEach(doc => {
           this.pass = doc.data()
           this.loading = false
+          this.password = this.pass.id
         })
       }).catch(error => {
         this.loading = false

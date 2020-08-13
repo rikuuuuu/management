@@ -2,7 +2,6 @@ const functions = require('firebase-functions');
 const express = require('express');
 const { Nuxt } = require('nuxt');
 var schedule = require('node-schedule');
-
 var OneSignal = require('onesignal-node');
 
 const dayjs = require('dayjs');
@@ -11,47 +10,29 @@ const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat)
 dayjs.locale('ja')
 
-const nodemailer = require('nodemailer')
-// const gmailEmail = functions.config().gmail.email
-// const gmailPassword = functions.config().gmail.password
-const gmailEmail = 'info.zzzz.dream@gmail.com'
-const gmailPassword = 'zzzz0dream'
-const mailTransport = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: gmailEmail,
-        pass: gmailPassword
-    }
-})
+// nodemailer
 
-var AWS = require('aws-sdk');
-
-// AWS.config.loadFromPath('./rootkey.json');
-
-// aws root acount
-// var accessKey = 'AKIAJPSMPRHG34VNRD7Q'
-// var secretKey = '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'
-
-// aws IAM user rikuuu
-var accessKey = 'AKIAXUGWE5A7DKO7J6MC'
-var secretKey = '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'
-
-AWS.config.update({
-  region: 'ap-northeast-1',
-  credentials: new AWS.Credentials(accessKey, secretKey)
-});
+// const nodemailer = require('nodemailer')
+// // const gmailEmail = functions.config().gmail.email
+// // const gmailPassword = functions.config().gmail.password
+// const gmailEmail = ''
+// const gmailPassword = ''
+// const mailTransport = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: gmailEmail,
+//         pass: gmailPassword
+//     }
+// })
 
 var admin = require("firebase-admin");
-
-
-// var serviceAccount = require("path/to/serviceAccountKey.json");
 
 // admin.initializeApp()
 
 admin.initializeApp({
   // credential: admin.credential.cert(serviceAccount),
   credential: admin.credential.applicationDefault(),
-  databaseURL: "https://o2-talk.firebaseio.com"
+  databaseURL: "https://manage-appli.firebaseio.com"
 });
 
 
@@ -78,6 +59,7 @@ async function handleRequest(req, res) {
 app.use(handleRequest);
 exports.ssrapp = functions.https.onRequest(app);
 
+
 exports.deleteaccount = functions.https.onCall((data, context) => {
   admin.auth().deleteUser(data.userid)
   .then(function() {
@@ -90,110 +72,133 @@ exports.deleteaccount = functions.https.onCall((data, context) => {
 });
 
 
-exports.awslist = functions.https.onCall(async (data, context) => {
-
-  var s3 = new AWS.S3({
-    // apiVersion: '2006-03-01'
-    signatureVersion: 'v4'
-  });
-
-  var listparams = {
-    Bucket: 'o2-bucket',
-    Prefix: data.filekey
-  }
-
-  var list = await s3.listObjects(listparams).promise()
-
-  var listkey = []
-
-  list.Contents.map(n => n.Key).forEach(v => {
-  		listkey.push(v)
-	});
-
-  var rootfileurl
-  var tsfileurls = []
-
-  await Promise.all(listkey.map(async key => {
-
-    console.log('key', key)
-
-    var urlparams = {
-          Key: key,
-          Bucket: 'o2-bucket',
-          Expires: 60*60
-        };
-
-    var videourl = s3.getSignedUrl('getObject', urlparams)
-
-    if ( key.indexOf('m3u8') != -1) {
-      rootfileurl = videourl
-    } else {
-      tsfileurls.push(videourl)
-    }
-
-
-  }))
-
-
-
-  // var listparams = {
-  //   Bucket: 'o2-bucket',
-  //   Prefix: 'Px3JJnWaT7iO3exG8neM/2061677995/'
-  // }
-  //
-  // var list = await s3.listObjects(listparams).promise()
-  //
-  // var listkey = []
-  //
-  // list.Contents.map(n => n.Key).forEach(v => {
-  // 		listkey.push(v)
-	// });
-  //
-  // var rootfile
-  // var rootfileurl
-  // var tsfiles = []
-  //
-  // await Promise.all(listkey.map( async key => {
-  //
-  //     var params = {
-  //           Key: key,
-  //           Bucket: 'o2-bucket',
-  //         };
-  //
-  //     var urlparams = {
-  //           Key: key,
-  //           Bucket: 'o2-bucket',
-  //           Expires: 60*60
-  //         };
-  //
-  //     var videourl = s3.getSignedUrl('getObject', urlparams)
-  //
-  //     var videoData = await s3.getObject(params).promise()
-  //
-  //     console.log('videourl', videourl)
-  //
-  //     const strvideo = String(videoData.Body)
-  //
-  //     if ( key.indexOf('m3u8') != -1) {
-  //       rootfile = strvideo
-  //       rootfileurl = videourl
-  //     } else {
-  //       tsfiles.push(strvideo)
-  //     }
-  //
-  // }))
-  console.log('rootfileurl', rootfileurl, 'tsfileurls', tsfileurls)
-
-  return { rootfileurl: rootfileurl, tsfileurls: tsfileurls }
-
-});
+// ---  AWS Fetch Video ---
+//
+// var AWS = require('aws-sdk');
+//
+// // AWS.config.loadFromPath('./rootkey.json');
+//
+// // aws root acount
+// // var accessKey = 'AKIAJPSMPRHG34VNRD7Q'
+// // var secretKey = '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'
+//
+// // aws IAM user rikuuu
+// var accessKey = 'AKIAXUGWE5A7DKO7J6MC'
+// var secretKey = '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'
+//
+// AWS.config.update({
+//   region: 'ap-northeast-1',
+//   credentials: new AWS.Credentials(accessKey, secretKey)
+// });
+//
+//
+//
+// // var serviceAccount = require("path/to/serviceAccountKey.json");
+//
+// exports.awslist = functions.https.onCall(async (data, context) => {
+//
+//   var s3 = new AWS.S3({
+//     // apiVersion: '2006-03-01'
+//     signatureVersion: 'v4'
+//   });
+//
+//   var listparams = {
+//     Bucket: 'o2-bucket',
+//     Prefix: data.filekey
+//   }
+//
+//   var list = await s3.listObjects(listparams).promise()
+//
+//   var listkey = []
+//
+//   list.Contents.map(n => n.Key).forEach(v => {
+//   		listkey.push(v)
+// 	});
+//
+//   var rootfileurl
+//   var tsfileurls = []
+//
+//   await Promise.all(listkey.map(async key => {
+//
+//     console.log('key', key)
+//
+//     var urlparams = {
+//           Key: key,
+//           Bucket: 'o2-bucket',
+//           Expires: 60*60
+//         };
+//
+//     var videourl = s3.getSignedUrl('getObject', urlparams)
+//
+//     if ( key.indexOf('m3u8') != -1) {
+//       rootfileurl = videourl
+//     } else {
+//       tsfileurls.push(videourl)
+//     }
+//
+//
+//   }))
+//
+//
+//
+//   // var listparams = {
+//   //   Bucket: 'o2-bucket',
+//   //   Prefix: 'Px3JJnWaT7iO3exG8neM/2061677995/'
+//   // }
+//   //
+//   // var list = await s3.listObjects(listparams).promise()
+//   //
+//   // var listkey = []
+//   //
+//   // list.Contents.map(n => n.Key).forEach(v => {
+//   // 		listkey.push(v)
+// 	// });
+//   //
+//   // var rootfile
+//   // var rootfileurl
+//   // var tsfiles = []
+//   //
+//   // await Promise.all(listkey.map( async key => {
+//   //
+//   //     var params = {
+//   //           Key: key,
+//   //           Bucket: 'o2-bucket',
+//   //         };
+//   //
+//   //     var urlparams = {
+//   //           Key: key,
+//   //           Bucket: 'o2-bucket',
+//   //           Expires: 60*60
+//   //         };
+//   //
+//   //     var videourl = s3.getSignedUrl('getObject', urlparams)
+//   //
+//   //     var videoData = await s3.getObject(params).promise()
+//   //
+//   //     console.log('videourl', videourl)
+//   //
+//   //     const strvideo = String(videoData.Body)
+//   //
+//   //     if ( key.indexOf('m3u8') != -1) {
+//   //       rootfile = strvideo
+//   //       rootfileurl = videourl
+//   //     } else {
+//   //       tsfiles.push(strvideo)
+//   //     }
+//   //
+//   // }))
+//   console.log('rootfileurl', rootfileurl, 'tsfileurls', tsfileurls)
+//
+//   return { rootfileurl: rootfileurl, tsfileurls: tsfileurls }
+//
+// });
 
 exports.listenWithdraw = functions.firestore.document('withdraw/{wid}').onCreate((snap, context) => {
   var withdraw = snap.data()
   var email = {
       from: gmailEmail,
-      to: 'app.dev@zzzz-dream.com',
-      subject: '【O2 タレントの出金申請の報告】',
+      to: '',
+      subject: '【タレントの出金申請の報告】',
       html: `<p>タレントから出金申請がありました。内容を確認し、期日までに振り込みをお願いいたします。</p>` +
       `<br>` +
       `<p>タレントの出金申請内容</p>` +
@@ -232,8 +237,8 @@ exports.listenUsers = functions.firestore.document('users/{userid}').onWrite((ch
 
     var email = {
         from: gmailEmail,
-        to: 'app.dev@zzzz-dream.com',
-        subject: `【O2 ${user}の登録の報告】`,
+        to: '',
+        subject: `【${user}の登録の報告】`,
         html: `<p>${user}の登録がありました。内容を確認し、本人確認の審査をお願いいたします。</p>` +
         `<br>` +
         `<p>${user}の登録内容</p>` +
@@ -258,8 +263,8 @@ exports.listenReport = functions.firestore.document('report/{rid}').onCreate((sn
 
   var email = {
       from: gmailEmail,
-      to: 'app.dev@zzzz-dream.com',
-      subject: `【O2 通報がありました。】`,
+      to: '',
+      subject: `【通報がありました。】`,
       html: `<p>通報がありました。内容を確認し、対処をお願いいたします。</p>` +
       `<br>` +
       `<p>通報内容</p>` +
@@ -290,8 +295,8 @@ exports.listenTalk = functions.firestore.document('talks/{tid}').onWrite((change
 
     var email = {
         from: gmailEmail,
-        to: 'app.dev@zzzz-dream.com',
-        subject: `【O2 トーク購入の報告】`,
+        to: '',
+        subject: `【トーク購入の報告】`,
         html: `<p>トーク購入が購入されました。</p>` +
         `<br>` +
         `<p>トーク内容</p>` +
@@ -315,8 +320,8 @@ exports.listenTalk = functions.firestore.document('talks/{tid}').onWrite((change
 
       var startemail = {
           from: gmailEmail,
-          to: 'app.dev@zzzz-dream.com',
-          subject: `【O2 トーク開始の報告】`,
+          to: '',
+          subject: `【トーク開始の報告】`,
           html: `<p>トークが開始されました。</p>` +
           `<br>` +
           `<p>トーク内容</p>` +
@@ -340,8 +345,8 @@ exports.listenTalk = functions.firestore.document('talks/{tid}').onWrite((change
         if (!(talk.talentId in talk.enterList)) {
           var temail = {
               from: gmailEmail,
-              to: 'app.dev@zzzz-dream.com',
-              subject: `【O2 タレントがトークに遅刻しています。】`,
+              to: '',
+              subject: `【タレントがトークに遅刻しています。】`,
               html: `<p>トークが開始されましたが、タレントがトークに遅刻しています。</p>` +
               `<br>` +
               `<p>トーク内容</p>` +
@@ -371,8 +376,8 @@ exports.listenRoom = functions.firestore.document('rooms/{rid}').onCreate((snap,
 
   var email = {
       from: gmailEmail,
-      to: 'app.dev@zzzz-dream.com',
-      subject: `【O2 ルームが作成されました。】`,
+      to: '',
+      subject: `【ルームが作成されました。】`,
       html: `<p>ルームが作成されました。　リンクからさらに詳しく確認することができます。</p>` +
       `<br>` +
       `<p>ルーム内容</p>` +
@@ -389,74 +394,76 @@ exports.listenRoom = functions.firestore.document('rooms/{rid}').onCreate((snap,
   })
 });
 
-exports.approvalNotification = functions.https.onCall(async (data, context) => {
 
-  var myClient = new OneSignal.Client({
-     userAuthKey: data.userAuthKey,
-     app: { appAuthKey: 'NDQ2MzYwMjEtOTYxYS00NDViLWJlYTgtOGU2ODBmZDg4MGJm', appId: '3c327fa0-eb03-4643-90b4-60d79efd3144' }
-  });
-
-  var text
-
-  if (data.isTalent === true) {
-
-    if (data.approvalState === 2) {
-      text = '本人確認写真とプロフィール情報が一致しません。再提出をしてください。'
-    } else {
-      text = '本人確認が完了しました。'
-    }
-
-  } else {
-
-    if (data.approvalState === 2) {
-      text = '本人確認写真とプロフィール情報が一致しません。再提出をしてください。'
-    } else {
-      text = '本人確認が完了しました。１on１ライブできるようになります。'
-    }
-
-  }
-
-  var approvalNotification = new OneSignal.Notification({
-    contents: {
-        en: text,
-        tr: "本人確認申請の結果"
-    }
-  });
-
-  // approvalNotification.postBody["included_segments"] = ["Active Users"];
-  // approvalNotification.postBody["excluded_segments"] = ["Banned Users"];
-  approvalNotification.postBody["include_player_ids"] = [data.userAuthKey]
-
-  // approvalNotification.postBody["data"] = {"abc": "123", "foo": "bar"};
-  // approvalNotification.postBody["send_after"] = 'Thu Sep 24 2015 14:00:00 GMT-0700 (PDT)';
-
-  myClient.sendNotification(approvalNotification, function (err, httpResponse,data) {
-     if (err) {
-         console.log('Something went wrong...');
-     } else {
-         console.log(data, httpResponse.statusCode);
-     }
-  });
-
-  var notref = admin.firestore().collection('notification')
-
-  notref.add({
-    signalId: data.user.info.signalId,
-    userId: data.user.info.userid,
-    title: data.user.info.nickName + 'さん',
-    body: text,
-    type: 5,
-    sentAt: data.sentat,
-    canceled: false
-  }).then(doc => {
-    console.log(doc.id)
-    notref.doc(doc.id).update({
-      nid: doc.id
-    });
-  });
-
-
-});
+// アプリ通知
+// exports.approvalNotification = functions.https.onCall(async (data, context) => {
+//
+//   var myClient = new OneSignal.Client({
+//      userAuthKey: data.userAuthKey,
+//      app: { appAuthKey: '', appId: '' }
+//   });
+//
+//   var text
+//
+//   if (data.isTalent === true) {
+//
+//     if (data.approvalState === 2) {
+//       text = '本人確認写真とプロフィール情報が一致しません。再提出をしてください。'
+//     } else {
+//       text = '本人確認が完了しました。'
+//     }
+//
+//   } else {
+//
+//     if (data.approvalState === 2) {
+//       text = '本人確認写真とプロフィール情報が一致しません。再提出をしてください。'
+//     } else {
+//       text = '本人確認が完了しました。１on１ライブできるようになります。'
+//     }
+//
+//   }
+//
+//   var approvalNotification = new OneSignal.Notification({
+//     contents: {
+//         en: text,
+//         tr: "本人確認申請の結果"
+//     }
+//   });
+//
+//   // approvalNotification.postBody["included_segments"] = ["Active Users"];
+//   // approvalNotification.postBody["excluded_segments"] = ["Banned Users"];
+//   approvalNotification.postBody["include_player_ids"] = [data.userAuthKey]
+//
+//   // approvalNotification.postBody["data"] = {"abc": "123", "foo": "bar"};
+//   // approvalNotification.postBody["send_after"] = 'Thu Sep 24 2015 14:00:00 GMT-0700 (PDT)';
+//
+//   myClient.sendNotification(approvalNotification, function (err, httpResponse,data) {
+//      if (err) {
+//          console.log('Something went wrong...');
+//      } else {
+//          console.log(data, httpResponse.statusCode);
+//      }
+//   });
+//
+//   var notref = admin.firestore().collection('notification')
+//
+//   notref.add({
+//     signalId: data.user.info.signalId,
+//     userId: data.user.info.userid,
+//     title: data.user.info.nickName + 'さん',
+//     body: text,
+//     type: 5,
+//     sentAt: data.sentat,
+//     canceled: false
+//   }).then(doc => {
+//     console.log(doc.id)
+//     notref.doc(doc.id).update({
+//       nid: doc.id
+//     });
+//   });
+//
+//
+// });
 
 exports.fetchPurchase = functions.https.onCall(async (data, context) => {
   // var purchases = []

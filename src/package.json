@@ -1,6 +1,6 @@
 {
-  "name": "o2-admin",
-  "description": "o2-admin",
+  "name": "manage-application",
+  "description": "manage-application",
   "private": true,
   "scripts": {
     "dev": "nuxt",

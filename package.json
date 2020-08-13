@@ -1,8 +1,8 @@
 {
-  "name": "o2-admin",
+  "name": "manage-application",
   "version": "1.0.0",
-  "description": "o2-admin",
-  "author": "zzzz inc, <riku.yano@zzzz-dream.com>",
+  "description": "manage-application",
+  "author": "<riku.yano@zzzz-dream.com>",
   "private": true,
   "scripts": {
     "setup": "npm run clean && npm run copyassets && npm run copystatic",

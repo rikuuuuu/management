@@ -4,7 +4,7 @@
       <div class="menu">
         <div class="menu-o2-icon">
           <a href="/" class="links">
-            <img src="/O2.png" alt="">
+            <img src="/nuxt.png" alt="">
           </a>
         </div>
         <div class="menu-container">

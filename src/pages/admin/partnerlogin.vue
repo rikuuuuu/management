@@ -4,7 +4,7 @@
     <div v-show="!loading" class="login-contents box-shadow">
       <div class="login-items">
         <div class="login-img">
-          <img src="/O2_fix.png" alt="">
+          <img src="/nuxt-icon.png" alt="">
           <p>O2パートナー事務所ログイン</p>
         </div>
         <div class="login-inputs-contents">

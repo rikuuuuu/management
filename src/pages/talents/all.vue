@@ -101,9 +101,9 @@ export default {
 
     } else {
 
-      this.$store.dispatch('talent/fetchTalents')
-      this.$store.dispatch('payment/fetchPayments')
-      this.$store.dispatch('talk/fetchTalks')
+      // this.$store.dispatch('talent/fetchTalents')
+      // this.$store.dispatch('payment/fetchPayments')
+      // this.$store.dispatch('talk/fetchTalks')
 
     }
   },
@@ -113,8 +113,8 @@ export default {
   },
   methods: {
     reflesh() {
-      this.$store.commit('talent/fleshTalents')
-      this.$store.commit('talent/fleshapTalents')
+      // this.$store.commit('talent/fleshTalents')
+      // this.$store.commit('talent/fleshapTalents')
 
       if (this.adminpartner !== null) {
 
@@ -123,9 +123,9 @@ export default {
 
       } else {
 
-        this.$store.dispatch('talent/fetchTalents')
-        this.$store.dispatch('payment/fetchPayments')
-        this.$store.dispatch('talk/fetchTalks')
+        // this.$store.dispatch('talent/fetchTalents')
+        // this.$store.dispatch('payment/fetchPayments')
+        // this.$store.dispatch('talk/fetchTalks')
 
       }
     },

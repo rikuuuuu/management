@@ -81,12 +81,12 @@ export default {
     // this.fetch(2)
   },
   async mounted() {
-    this.$store.commit('payout/fleshPayouts')
+    // this.$store.commit('payout/fleshPayouts')
     this.currentmonth()
-    this.$store.dispatch('payout/fetchPayouts')
-    this.$store.dispatch('talent/fetchTalents')
-    this.$store.dispatch('payment/fetchPayments')
-    this.$store.dispatch('partner/fetchPartners')
+    // this.$store.dispatch('payout/fetchPayouts')
+    // this.$store.dispatch('talent/fetchTalents')
+    // this.$store.dispatch('payment/fetchPayments')
+    // this.$store.dispatch('partner/fetchPartners')
     this.loading = false
   },
   methods: {

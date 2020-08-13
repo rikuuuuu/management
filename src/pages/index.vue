@@ -1,8 +1,7 @@
 <template>
   <div class="">
-    <p>sample</p>
-    <!-- <div v-show="pageloading" class="loader center-loader"></div>
-    <menu-head v-show="!pageloading" v-bind:title="'O2'">
+    <div v-show="pageloading" class="loader center-loader"></div>
+    <menu-head v-show="!pageloading" v-bind:title="'管理画面'">
       <div class="home-container">
         <div class="sales-contents main-contents">
           <div class="sales-title flex">
@@ -94,15 +93,15 @@
           </div>
         </div>
       </div>
-    </menu-head> -->
+    </menu-head>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import MenuHead from '~/components/MenuHead'
-// import AllSales from '~/components/AllSales'
+import MenuHead from '~/components/MenuHead'
+import AllSales from '~/components/AllSales'
 
 Vue.use(Vuex);
 
@@ -115,92 +114,92 @@ export default {
     }
   },
   components: {
-    // MenuHead,
-    // AllSales
+    MenuHead,
+    AllSales
+  },
+  created() {
+
+    if (this.adminpartner !== null) {
+
+      var partnerid = this.adminpartner
+      this.$store.dispatch('talent/fetchPartnersTalents', { partnerid }) //順番でフェッチしないとその事務所以外のデータもとってしまう
+
+    } else {
+
+      if (this.$store.state.auth !== true) {
+        return
+      }
+
+      // this.$store.commit('payout/fleshPayouts') // 出金の変更対応
+      // this.$store.dispatch('payout/fetchPayouts')
+      // this.$store.dispatch('fan/fetchFans')
+      // this.$store.dispatch('talent/fetchTalents')
+      // this.$store.dispatch('partner/fetchPartners')
+      // this.$store.dispatch('payment/fetchPayments')
+      // this.$store.dispatch('refund/fetchRefunds')
+
+    }
+  },
+  mounted() {
+    this.pageloading = false
+    this.loading = false
+  },
+  methods: {
+  },
+  computed: {
+    allsales() {
+      var items = this.$store.getters['payment/payments']
+      var list = items.slice();
+      return list
+    },
+    sale() {
+      var items = this.payments
+
+      var sales = 0
+
+      for ( var n in items ) {
+        if (items[n].pay.point) {
+          sales += Math.round(items[n].pay.point * 2 * 0.2)
+        }
+      }
+
+      return sales.toLocaleString()
+    },
+    distribution() {
+      var items = this.$store.getters['payment/payments']
+
+      var distributions = 0
+
+      for ( var n in items ) {
+        if (items[n].pay.point) {
+          distributions += items[n].pay.point * 2
+        }
+      }
+
+      return distributions.toLocaleString()
+    },
+    adminpartner() {
+      return this.$store.getters['adminpartner']
+    },
+    fans() {
+      return this.$store.getters['fan/fans']
+    },
+    talents() {
+      return this.$store.getters['talent/talents']
+    },
+    partners() {
+      return this.$store.getters['partner/partners']
+    },
+    apfans() {
+      return this.$store.getters['fan/apfans']
+    },
+    aptalents() {
+      return this.$store.getters['talent/aptalents']
+    },
+    payments() {
+      return this.$store.getters['payment/payments']
+    }
   }
-  // created() {
-  //
-  //   if (this.adminpartner !== null) {
-  //
-  //     var partnerid = this.adminpartner
-  //     this.$store.dispatch('talent/fetchPartnersTalents', { partnerid }) //順番でフェッチしないとその事務所以外のデータもとってしまう
-  //
-  //   } else {
-  //
-  //     if (this.$store.state.auth !== true) {
-  //       return
-  //     }
-  //
-  //     // this.$store.commit('payout/fleshPayouts') // 出金の変更対応
-  //     this.$store.dispatch('payout/fetchPayouts')
-  //     this.$store.dispatch('fan/fetchFans')
-  //     this.$store.dispatch('talent/fetchTalents')
-  //     this.$store.dispatch('partner/fetchPartners')
-  //     this.$store.dispatch('payment/fetchPayments')
-  //     this.$store.dispatch('refund/fetchRefunds')
-  //
-  //   }
-  // },
-  // mounted() {
-  //   this.pageloading = false
-  //   this.loading = false
-  // },
-  // methods: {
-  // },
-  // computed: {
-  //   allsales() {
-  //     var items = this.$store.getters['payment/payments']
-  //     var list = items.slice();
-  //     return list
-  //   },
-  //   sale() {
-  //     var items = this.payments
-  //
-  //     var sales = 0
-  //
-  //     for ( var n in items ) {
-  //       if (items[n].pay.point) {
-  //         sales += Math.round(items[n].pay.point * 2 * 0.2)
-  //       }
-  //     }
-  //
-  //     return sales.toLocaleString()
-  //   },
-  //   distribution() {
-  //     var items = this.$store.getters['payment/payments']
-  //
-  //     var distributions = 0
-  //
-  //     for ( var n in items ) {
-  //       if (items[n].pay.point) {
-  //         distributions += items[n].pay.point * 2
-  //       }
-  //     }
-  //
-  //     return distributions.toLocaleString()
-  //   },
-  //   adminpartner() {
-  //     return this.$store.getters['adminpartner']
-  //   },
-  //   fans() {
-  //     return this.$store.getters['fan/fans']
-  //   },
-  //   talents() {
-  //     return this.$store.getters['talent/talents']
-  //   },
-  //   partners() {
-  //     return this.$store.getters['partner/partners']
-  //   },
-  //   apfans() {
-  //     return this.$store.getters['fan/apfans']
-  //   },
-  //   aptalents() {
-  //     return this.$store.getters['talent/aptalents']
-  //   },
-  //   payments() {
-  //     return this.$store.getters['payment/payments']
-  //   }
-  // }
 }
 </script>
 

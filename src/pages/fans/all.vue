@@ -94,21 +94,21 @@ export default {
   created() {
   },
   mounted() {
-    this.$store.dispatch('fan/fetchFans')
-    this.$store.dispatch('payment/fetchPayments')
-    this.$store.dispatch('talk/fetchTalks')
+    // this.$store.dispatch('fan/fetchFans')
+    // this.$store.dispatch('payment/fetchPayments')
+    // this.$store.dispatch('talk/fetchTalks')
 
     this.pageloading = false
     this.loading = false
   },
   methods: {
     reflesh() {
-      this.$store.commit('fan/fleshFans')
-      this.$store.commit('fan/fleshapFans')
-
-      this.$store.dispatch('fan/fetchFans')
-      this.$store.dispatch('payment/fetchPayments')
-      this.$store.dispatch('talk/fetchTalks')
+      // this.$store.commit('fan/fleshFans')
+      // this.$store.commit('fan/fleshapFans')
+      //
+      // this.$store.dispatch('fan/fetchFans')
+      // this.$store.dispatch('payment/fetchPayments')
+      // this.$store.dispatch('talk/fetchTalks')
 
     },
     sortBy: function(key) {
